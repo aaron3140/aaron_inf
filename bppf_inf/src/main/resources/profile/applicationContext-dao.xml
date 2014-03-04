@@ -1,0 +1,214 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+xmlns:jaxws="http://cxf.apache.org/jaxws"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:tx="http://www.springframework.org/schema/tx"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/beans
+           http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+           http://www.springframework.org/schema/context
+           http://www.springframework.org/schema/context/spring-context-3.0.xsd
+           http://www.springframework.org/schema/tx
+           http://www.springframework.org/schema/tx/spring-tx-3.0.xsd
+           http://cxf.apache.org/jaxws http://cxf.apache.org/schemas/jaxws.xsd
+            http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-2.0.xsd">
+
+	<import resource="classpath:META-INF/cxf/cxf.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-extension-soap.xml" />
+	<import resource="classpath:META-INF/cxf/cxf-servlet.xml" />
+		
+	<!-- 加载解密用的key -->
+	<context:property-placeholder location="classpath*:profile/encryptkey.properties"
+		ignore-unresolvable="true" />
+	<!-- 实例化解密类，传入一个参数key -->
+	<bean id="decrypter" class="common.utils.password.ImportantInfoDecrypter">
+		<constructor-arg index="0">
+ 		<value>${ENCRYPT.KEY}</value>
+ 		</constructor-arg>
+	</bean>
+	
+	<!-- 启动注解扫描和注入 -->
+	<context:component-scan base-package="com.tisson.common.dao" />
+	<context:component-scan base-package="common.dao.bis" />
+	<context:component-scan base-package="websvc.service" />
+	<!-- ==================== 加载.properties ======================= -->
+     <bean id="propertyMananger" class="org.springframework.beans.factory.config.PropertyPlaceholderConfigurer">
+		<property name="locations">
+			<list>
+				<value>file:${INFCONF_HOME}/profile/c3p0.properties</value>
+				<value>file:${INFCONF_HOME}/profile/wsclient.properties</value>
+			</list>
+		</property>
+	</bean>
+	
+	<!--服务端 发布ws服务  -->
+	<jaxws:endpoint id="wsDealProcessorService" address="/DealProcessor"
+		implementor="websvc.impl.DealProcessorServiceImpl">
+		<!-- 
+		<jaxws:inInterceptors>
+			<bean
+				class="org.apache.cxf.interceptor.LoggingInInterceptor" />
+		</jaxws:inInterceptors>
+		<jaxws:outInterceptors>
+			<bean
+				class="org.apache.cxf.interceptor.LoggingOutInterceptor" />
+		</jaxws:outInterceptors>
+		 -->
+	</jaxws:endpoint>
+	
+	<!--客户端 调用ws服务  -->
+	<bean id="DealProcessorService" class="websvc.DealProcessorService"
+		factory-bean="DealProcessorServiceFactory" factory-method="create" />
+	<bean id="DealProcessorServiceFactory"
+		class="org.apache.cxf.jaxws.JaxWsProxyFactoryBean">
+		<property name="serviceClass"
+			value="websvc.DealProcessorService" />
+		<property name="address"
+			value="${wsRootUrl}/service/DealProcessor" />
+	</bean>
+
+	
+	<!-- C3P0数据源 -->
+      <bean id="bisDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.jdbcUrl}" />
+		<property name="user" value="#{decrypter.decrypt('${c3p0.user}')}"/>
+		<property name="password" value="#{decrypter.decrypt('${c3p0.password}')}" />
+
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
+		<property name="acquireRetryDelay"	value="${c3p0.acquireRetryDelay}" />
+		<property name="checkoutTimeout"	value="${c3p0.checkoutTimeout}" />
+
+		<property name="preferredTestQuery" value="${c3p0.preferredTestQuery}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}" />
+		
+		<property name="numHelperThreads" value="${c3p0.numHelperThreads}" />
+      </bean>
+	
+	   <bean id="infDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.inf.jdbcUrl}" />
+		<property name="user" value="#{decrypter.decrypt('${c3p0.inf.user}')}"/>
+		<property name="password" value="#{decrypter.decrypt('${c3p0.inf.password}')}" />
+		
+
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
+		<property name="acquireRetryDelay"	value="${c3p0.acquireRetryDelay}" />
+		<property name="checkoutTimeout"	value="${c3p0.checkoutTimeout}" />
+
+		<property name="preferredTestQuery" value="${c3p0.preferredTestQuery}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}" />
+		
+		<property name="numHelperThreads" value="${c3p0.numHelperThreads}" />
+      </bean>
+      
+      <bean id="tvsDataSource" class="com.mchange.v2.c3p0.ComboPooledDataSource" destroy-method="close">
+		<property name="driverClass" value="${c3p0.driverClass}" />
+		<property name="jdbcUrl" value="${c3p0.tvs.jdbcUrl}" />
+		<property name="user" value="#{decrypter.decrypt('${c3p0.tvs.user}')}"/>
+		<property name="password" value="#{decrypter.decrypt('${c3p0.tvs.password}')}" />
+
+		<property name="maxPoolSize" value="${c3p0.maxPoolSize}" />
+		<property name="minPoolSize" value="${c3p0.minPoolSize}" />
+		<property name="initialPoolSize" value="${c3p0.initialPoolSize}" />
+
+		<property name="acquireIncrement" value="${c3p0.acquireIncrement}" />
+		<property name="acquireRetryAttempts" value="${c3p0.acquireRetryAttempts}" />
+		<property name="acquireRetryDelay"	value="${c3p0.acquireRetryDelay}" />
+		<property name="checkoutTimeout"	value="${c3p0.checkoutTimeout}" />
+
+		<property name="preferredTestQuery" value="${c3p0.preferredTestQuery}" />
+		<property name="idleConnectionTestPeriod" value="${c3p0.idleConnectionTestPeriod}" />
+		<property name="maxIdleTime" value="${c3p0.maxIdleTime}" />
+		
+		<property name="maxStatements" value="${c3p0.maxStatements}" />
+		<property name="maxStatementsPerConnection" value="${c3p0.maxStatementsPerConnection}" />
+		
+		<property name="numHelperThreads" value="${c3p0.numHelperThreads}" />
+      </bean>
+      
+      
+      
+	<!-- bis -->
+   	<bean id="bisJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="bisDataSource"></property>
+	</bean>
+	<bean id="bisBaseDAO" class="common.dao.impl.BaseDaoImpl">
+		<property name="jdbcTemplate" ref="bisJdbcTemplate"></property>
+	</bean>	
+	<bean id="bisTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+	  <property name="dataSource" ref="bisDataSource" />   
+  	</bean> 
+  	
+	<bean id="bisBaseDAOProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">  
+	    <property name="transactionManager" >  
+	      	<ref local="bisTxManager"/>  
+	    </property>  
+	    <property name="target">  
+	      	<ref local="bisBaseDAO"/>  
+	    </property>  
+	    <property name="transactionAttributes">  
+	      	<props>  
+	        	<prop key="tran_*">PROPAGATION_REQUIRED</prop><!--  PROPAGATION_NESTED-->  
+	     	</props>  
+	   </property>  
+ 	</bean> 
+ 
+  
+  <!-- inf -->
+  	<bean id="infJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="infDataSource"></property>
+	</bean>
+	<bean id="infBaseDAO" class="common.dao.impl.BaseDaoImpl">
+		<property name="jdbcTemplate" ref="infJdbcTemplate"></property>
+	</bean>
+ 	<bean id="infTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+        <property name="dataSource" ref="infDataSource" />   
+    </bean> 
+    
+    <bean id="infBaseDAOProxy" class="org.springframework.transaction.interceptor.TransactionProxyFactoryBean">  
+	    <property name="transactionManager" >  
+	      	<ref local="infTxManager"/>  
+	    </property>  
+	    <property name="target">  
+	      	<ref local="infBaseDAO"/>  
+	    </property>  
+	    <property name="transactionAttributes">  
+	      	<props>  
+	        	<prop key="tran_*">PROPAGATION_REQUIRED</prop><!--  PROPAGATION_NESTED-->  
+	     	</props>  
+	   </property>  
+ 	</bean>
+  <!-- tvs -->
+    <bean id="tvsJdbcTemplate" class="org.springframework.jdbc.core.JdbcTemplate">
+		<property name="dataSource" ref="tvsDataSource"></property>
+	</bean>
+	<bean id="tvsBaseDAO" class="common.dao.impl.BaseDaoImpl">
+		<property name="jdbcTemplate" ref="tvsJdbcTemplate"></property>
+	</bean>
+ 	<bean id="tvsTxManager" class="org.springframework.jdbc.datasource.DataSourceTransactionManager">   
+        <property name="dataSource" ref="tvsDataSource" />   
+    </bean>  
+  
+          <tx:annotation-driven transaction-manager="bisTxManager" />
+		  <tx:annotation-driven transaction-manager="infTxManager" /> 
+		  <!-- 其他 -->
+	<bean id="SpringContextHelper" class="common.utils.SpringContextHelper" />
+</beans>

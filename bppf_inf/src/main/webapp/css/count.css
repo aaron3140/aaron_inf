@@ -1,0 +1,86 @@
+@charset "utf-8";
+/*全局*/
+	body,div,dl,dt,dd,ul,ol,li,h1,h2,h3,h4,h5,h6,pre,form,fieldset,input,textarea,p,blockquote,th,td{ margin:0; padding:0;}
+	table{ border-collapse:collapse; border-spacing:0;}
+	fieldset,img{ border:0;}
+	address,caption,cite,code,dfn,em,strong,th,var{ font-style:normal; font-weight:400;}
+	ol,ul,li{ list-style:none;}
+	body{ font:12px "Microsoft Yahei","宋体"; color:#555;}
+	table{ width:100%;}
+	a:link,a:visited{ color:#575757; text-decoration:none;}
+	a:hover{ color:#007CE6; text-decoration:none;}
+	input{ border:0;}
+	textarea{ font-size:12px;}
+	h1, h2, h3, h4, h5, h6{ font-size:14px;}
+	
+	.wrap{ width:960px; margin:0 auto;}
+	.borWrap{ border:1px solid #DBDBDB; border-bottom-width:2px; -webkit-border-radius:4px; -moz-border-radius:4px; border-radius:4px; background:#FFF;}
+	.borHead{ border:1px solid #DBDBDB; -webkit-border-top-left-radius:4px;-webkit-border-top-right-radius:4px;-moz-border-top-left-radius:4px;-moz-border-top-right-radius:4px;
+			  border-top-left-radius:4px; border-top-right-radius:4px;height:33px; 
+			  line-height:33px;padding:0 18px; font-size:14px; position:relative;}
+	.borHead .more{ position:absolute; width:100px; height:33px; line-height:33px; display:inline-block; color:#007CE6; text-align:right; top:0; right:5px;}		  
+	.borMain{ border:1px solid #DBDBDB;-webkit-border-bottom-left-radius:4px;-webkit-border-bottom-right-radius:4px;-moz-border-bottom-left-radius:4px;-moz-border-bottom-right-radius:4px;border-bottom-left-radius:4px;border-bottom-right-radius:4px;border-bottom-width:2px;border-top-width:0; background:#FFF; margin-bottom:15px;}
+	
+	
+/*提交按钮*/
+	.blueBtnSub{ width:161px; height:33px; text-align:center; line-height:33px; color:#007CE6; font-weight:bold; cursor:pointer;background-color: #DDDDDD;float: left;}
+	
+
+/*接口信息填写*/
+	.countHead{ width:922px;}
+	.countMain{ width:944px; padding:7px;}
+	.countcont{ border:1px solid #BECED8;-webkit-border-radius:4px;-moz-border-radius:4px;border-radius:4px; overflow:hidden; width:942px;}
+	.countcont .sidebar { float:left; width:205px; padding-bottom:20px;}
+	.countcont .sidebar h2{ padding:0 0 0 20px; color:#F60; line-height:50px;height:50px;}
+	/* 根 */
+	.countcont .sidebar ul{ border-bottom:1px solid #BECED8; padding:12px 0 12px 20px; height:7%;overflow:hidden;width:184px; display:inline-block; font-size:18px; float:left; cursor:pointer; border-right:1px solid #BECED8;color:#007CE6; background-color: #E7E7E4;}
+	/*叶子*/
+	.countcont .sidebar li{ border-bottom:1px solid #BECED8; padding:12px 0 12px 20px; height:4%;overflow:hidden;width:184px; display:inline-block; font-size:14px; float:left; cursor:pointer; border-right:1px solid #BECED8;}
+	.countcont .sidebar li.current{ background:#FFF;border-right:1px solid #FFF; font-weight:700;}
+	.countcont .sidebar li a{ height:30px; line-height:30px; color:#2e6492; font-size:14px;}
+	
+	.countcont .sidebar .else{}
+	.countcont .sidebar .else li{ line-height:30px;}
+	.countcont .sidebar .else li a{ padding-left:25px;  display:inline-block; height:20px; line-height:20px;}
+	.countcont .sidebar .else li .meb{ background-position:-7px -579px;}
+	.countcont .sidebar .else li .game{ background-position:-7px -624px;}
+	.countcont .sidebar .else li .news{ background-position:-7px -659px;}
+	.countcont .sidebar .else li .help{ background-position:-7px -703px;}
+	
+	.countcont .main{ float:right; width:687px;margin:0 25px 0 0; display:inline; padding-bottom:50px;}
+	.countcont .charge{ border:1px solid #D5D5D5; padding:0 12px; width:634px; background:#FFF; margin-top:26px;}
+	.countcont .charge h4{ height:40px; line-height:40px; border-bottom:1px dotted #DDD; color:#999;}
+	.countcont .charge ul{ width:100%; overflow:hidden; height:30px; margin-top:10px; padding-bottom: 11;} 
+	.countcont .charge li{ float:left; width:100px;height:20px; text-align:center; padding-top:10px; margin-right:95px; cursor:default;} 
+	.countcont .charge .last{ margin-right:0;} 
+	.countcont .charge p{ text-align:center; color:#9D9D9D;} 
+	.countcont .charge .txt{ float:left; padding:4px; border:1px solid #DDD; background:#FFF; height:25px; line-height:25px;width:150px; margin-top:2px;}
+	.countcont .charge p.finish{ color:#ED7800;}
+	.countcont .msg{ border:1px solid #D5D5D5; padding:0 12px 20px; width:97%; background:#FFF; margin-top:26px;}
+	.countcont .msg .head{ overflow:hidden; width:100%; height:40px; line-height:40px; border-bottom:1px dotted #DDD;}
+	.countcont .msg .head h4{ float:left; color:#007CE6;}
+	.countcont .msg .head a{ float:right; color:#999;}
+	.countcont .msg .head a img{ width:17px; height:20px; float:left; margin:12px 2px 0 0;}
+	.countcont .msg h5{ height:40px; line-height:40px;padding-left:25px; color:#F60; margin-bottom:10px;}
+	.countcont .msg .box { padding-bottom:50px;}
+	.countcont .msg .box li{ overflow:hidden; width:100%; color:#333; line-height:30px; margin:0 0 5px 0;}
+	.countcont .msg .box label{ float:left; width:120px; text-align:right; padding-right:10px;}
+	.countcont .msg .box select{ float:left; width:280px; margin-top:6px;}
+	.countcont .msg .box .txt{ float:left; padding:4px; border:1px solid #DDD; background:#FFF; height:25px; line-height:25px;width:270px; margin-top:2px;}
+	.countcont .msg .box p{ margin-left:10px; display:inline;float:left;}
+	.countcont .msg .box .wrong{ color:#F00;}
+	.countcont .msg .box .wrong img{ float:left; width:16px; height:16px;  margin:8px 3px 0 0;}
+	.countcont .msg .box .correct{ color:#44A812;}
+	.countcont .msg .box .correct img{ float:left; width:16px; height:16px; margin:8px 3px 0 0;}
+	.countcont .msg .box .line{ padding:0 0 0 121px; overflow:hidden; width:540px;}
+	.countcont .msg .box .line span{ color:#F60; font-weight:700;float: left;}
+	.countcont .msg .box .btn{ padding:0 0 0 131px; overflow:hidden; width:530px;}
+	.countcont .tipsHead{ color:#F60; height:30px; line-height:30px; border-top:1px dotted #CCC; padding-top:10px;font-size: 17px;}
+	.countcont .msg .cheBox { padding:10px 0 50px;}
+	.countcont .msg .cheBox li{ overflow:hidden; width:100%; color:#333; line-height:30px; margin:0 0 5px 0; font-size:14px;}
+	.countcont .msg .cheBox label{ float:left; width:200px; text-align:right; padding-right:10px;}
+	.countcont .msg .cheBox p{ float:left; width:120px; text-align:left; padding-right:10px; color:#007CE6;}
+	.countcont .msg .cheBox .btn{ padding:0 0 0 88px; overflow:hidden; width:530px;}
+	.countcont .msg .cheBox .btn input{ margin-right:20px;}
+	.countcont .tipsInfo{ padding:0 20px; width:621px;}
+	.countcont .tipsInfo li{ line-height:24px; color:#7F7F6F;font-size: 14px;}
